@@ -1,6 +1,6 @@
 # register-login-user
 
-## framwor : NodeJs
+## framwork : NodeJs
 ## documentation : POSTMAN
 ## dbms : mysql
 ## error handlling : TRUE
