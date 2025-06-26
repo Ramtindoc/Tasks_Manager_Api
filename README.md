@@ -1,8 +1,8 @@
 # register-login-user
 
 ## framwork : NodeJs
-## documentation : POSTMAN
-## dbms : mysql
+## documentation : Postman
+## dbms : MySql
 ## error handlling : TRUE
 ## clear code & module stracturing : TRUE
 ## validation : TRUE
