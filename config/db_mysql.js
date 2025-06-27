@@ -11,8 +11,8 @@ const pool = mysql
   })
   .promise();
 
-const getTable = async (req, res) => {
-  const getpool = await pool.query("select * from test.users");
+const getTable = async (res) => {
+  const getpool = await pool.query("select * from test.test_tb");
   // return getpool[0];
 };
 

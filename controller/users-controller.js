@@ -32,6 +32,7 @@ const register = tryCatchHandller(async (req, res) => {
     req.body.name,
     req.body.email,
     hashPass
+    // req.body.password    //test
   );
   logger.register(result);
 
@@ -43,8 +44,7 @@ const register = tryCatchHandller(async (req, res) => {
   const token = jwt.sign({ id: newUser.id }, process.env.SECRET_KEY);
   return res
     .header("authorization", token)
-    .send(_.pick(newUser, "name", "email"));
-});
+    .send(_.pick(newUser, "name", "email"))});
 
 // ----- login
 
@@ -63,7 +63,8 @@ const login = tryCatchHandller(async (req, res) => {
   if (!user) {
     return res.status(404).send("email or password is invalid");
   }
-  const validUser = bcrypt.compare(req.body.password, user.password);
+
+  const validUser = await bcrypt.compare(req.body.password, user.password);
   if (!validUser) return res.status(400).send("email or password is invalid");
 
   //create jwt to user in login
