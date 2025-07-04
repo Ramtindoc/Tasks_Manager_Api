@@ -1,17 +1,19 @@
 const appError = require("../utilities/app_error");
-const { auth } = require("../middlewares/auth");
 
 const errorHandller = (error, req, res, next) => {
-  console.log(error);
-  if (error.name === "ValidationError")
-    return res.status(500).send("validation is failed");
+  console.log("Error:", error);
 
-  if (error instanceof appError)
-    return res
-      .status(error.statusCode)
-      .send({ errorCode: error.errorCode, message: error.message });
+  if (error.name === "ValidationError") {
+    return res.status(400).send("Validation failed.");
+  }
 
-  if (auth.req.header !== "authorization")
-    if (!token) return res.status(401).send("access denied");
+  if (error instanceof appError) {
+    return res.status(error.statusCode).send({
+      errorCode: error.errorCode,
+      message: error.message,
+    });
+  }
+  return res.status(500).send("Internal Server Error");
 };
+
 module.exports = errorHandller;
