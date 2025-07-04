@@ -1,13 +1,26 @@
 const express = require("express");
 const router = express.Router();
-const controller = require("../controller/users-controller");
-const auth = require("../middlewares/auth");
+const userModel = require("../models/users-model")
+const {auth} = require("../middlewares/auth");
 
-router.post("/register", controller.register);
 
-// authentication to login with user token
-// router.use(auth);
+router.get('/profile', auth , async (req,res)=> {
+    try {
+        const userId = req.user.id;
+        const user = await userModel.getUserById(userId);
 
-router.post("/login", controller.login);
+        if(!user) return res.status(404).send("user not found");
+        
+        else 
+        return res.status(200).send(
+            {
+                email:user.email,
+                name:user.name,
+            }
+        );
+    } catch (err) {
+        res.status(500).send('server error')
+    }
+})
 
 module.exports = router;
