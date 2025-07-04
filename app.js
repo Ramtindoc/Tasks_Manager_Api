@@ -1,8 +1,8 @@
-// router
 const userRouter = require("./router/users_router");
-// errorHandller
+const authRouter = require("./router/auth-router")
+
 const errorHandller = require("./middlewares/error_handller");
-// logger module handller
+
 const logger = require("./logger/logger");
 
 const morgan = require("morgan");
@@ -29,9 +29,11 @@ app.use(express.static("public"));
 
 // middleware function to used structuring modules
 app.use("/", userRouter);
+app.use("/", authRouter);
 
 // error handller
 app.use(errorHandller);
+
 
 // add connect port
 const port = process.env.DB_PORT || 3000;
