@@ -1,5 +1,4 @@
 const mysql = require("mysql2");
-// const logger = require("../logger/logger");
 require("dotenv").config();
 
 const pool =  mysql
@@ -11,7 +10,7 @@ const pool =  mysql
   })
   .promise();
 
-  // ذخیره توکن
+  // Store token
 async function storeToken(userId,accessToken,refreshToken,expiresAt) {
  
   try {
@@ -26,7 +25,7 @@ async function storeToken(userId,accessToken,refreshToken,expiresAt) {
  }
  }
 
-// خواندن توکن 
+// Read token
 async function getTokenByRefreshToken(refreshToken) {
   // const [rows,fields]
   try {
@@ -34,6 +33,7 @@ async function getTokenByRefreshToken(refreshToken) {
   'SELECT * FROM demo.user_tokens WHERE refresh_token = ?',
   [refreshToken]
 );
+
 return rows[0];
 
   } catch (err) {
