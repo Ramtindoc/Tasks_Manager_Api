@@ -1,13 +1,8 @@
 const userRouter = require("./router/users_router");
-const authRouter = require("./router/auth-router")
-
+const authRouter = require("./router/auth-router");
+const { logger } = require("./logger/logger");
 const errorHandller = require("./middlewares/error_handller");
-
-const logger = require("./logger/logger");
-
 const morgan = require("morgan");
-const helmet = require("helmet");
-
 require("dotenv").config();
 
 // main module by express
@@ -17,26 +12,25 @@ app.use(express.json());
 
 const { method } = require("lodash");
 
-// get environment
-console.log(app.get("env"));
-
-// use morgan by tiny to get a some information
+// Enable HTTP request logging in development mode for easier debugging
 if (app.get("env") === "development") {
-  app.use(morgan("tiny"));
+  logger("env : development");
+  app.use(morgan("dev"));
+} else if (app.get("env") === "production") {
+  logger("env : production");
+  app.use(morgan("combined"));
 }
 
-app.use(express.static("public"));
+app.use(express.static(__dirname));
 
-// middleware function to used structuring modules
-app.use("/", userRouter);
-app.use("/", authRouter);
+app.use("/api", userRouter);
+app.use("/api", authRouter);
 
 // error handller
 app.use(errorHandller);
 
-
-// add connect port
-const port = process.env.DB_PORT || 3000;
+// Use the port from environment variables or default to 3000
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`app running on port ${port}`);
+  logger(`app running on port ${port}`);
 });
