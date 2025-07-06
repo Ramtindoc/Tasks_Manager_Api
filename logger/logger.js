@@ -1,9 +1,4 @@
-const test = (res) => {
-  console.log(res);
-};
-
-const register = (req, res) => {
-  console.log("register");
-};
-
-module.exports = { test, register };
+const logger = (result)=>{
+  console.log(result);
+}
+module.exports = {logger};
