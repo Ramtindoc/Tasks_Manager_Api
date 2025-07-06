@@ -11,9 +11,9 @@ const refreshToken = async (req,res)=>{
     if(!stored) return res.status(403).send('invalid refresh token');
 
     const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-    const {accessToken,refreshToken: newRefreshToken} = generateTokens(payload.userId);
+    const {accessToken,refreshToken: newRefreshToken, expiresAt} = generateTokens(payload.id);
 
-    await storeToken(payload.userId , accessToken , newRefreshToken);
+    await storeToken(payload.id , accessToken , newRefreshToken , expiresAt);
 
     res.json({accessToken ,refreshToken: newRefreshToken })
   } catch (err) {
