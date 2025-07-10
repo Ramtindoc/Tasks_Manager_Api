@@ -13,7 +13,6 @@ router.get("/profile", auth, async (req, res) => {
     else
       return res.status(200).send({
         email: user.email,
-        name: user.name,
       });
   } catch (err) {
     res.status(500).send("server error");
