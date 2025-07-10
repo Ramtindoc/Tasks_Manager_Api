@@ -1,5 +1,7 @@
 const userRouter = require("./router/users_router");
 const authRouter = require("./router/auth-router");
+const taskRouter = require("./router/task_router");
+
 const { logger } = require("./logger/logger");
 const errorHandller = require("./middlewares/error_handller");
 const morgan = require("morgan");
@@ -25,6 +27,7 @@ app.use(express.static(__dirname));
 
 app.use("/api", userRouter);
 app.use("/api", authRouter);
+app.use("/api", taskRouter);
 
 // error handller
 app.use(errorHandller);
