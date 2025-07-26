@@ -2,25 +2,48 @@ const express = require("express");
 const router = express.Router();
 const { auth } = require("../middlewares/auth");
 const TaskModel = require("../models/task-model");
-const logger = require("../logger/logger");
+// const logger = require("../logger/logger");
 
 // create task for logging users
-router.post("/tasks", auth, async (req, res) => {
+router.post("/task/create", auth, async (req, res) => {
   const userId = req.user.id;
   const { title, description } = req.body;
 
-  if (!title) return res.status(400).send("title is required");
-
+  if (!title || !description) {
+    return res
+      .status(400)
+      .json({ message: "Title and Description are required" });
+  }
   try {
-    const result = await TaskModel.createTask(userId, title, description);
-    res.status(201).send({ message: "task created", userId: userId });
+    const newTask = await TaskModel.createTask(userId, title, description);
+    res
+      .status(201)
+      .send({ message: "task created successfully", task: newTask });
   } catch (err) {
     console.error("error create task", err);
     res.status(500).send("server error");
   }
 });
 
-// show tasks of user id
+router.delete("/task/delete", auth, async (req, res) => {
+  const userId = req.user.id;
+  const { task_number } = req.body;
+  if (!userId || !task_number) {
+    return res.status(400).send("user is missing");
+  }
+  try {
+    const deleteTaks = await TaskModel.deleteTask(task_number, userId); // del by id
+    // affectedRows === 1 MEANS Task is found and deleted
+    if (deleteTaks.affectedRows === 0) {
+      return res.status(404).js("Task not found or not owned by user");
+    }
+    return res.status(200).json({ message: "Task deleted successfully" });
+  } catch (error) {
+    res.status(500).send("server error", error);
+  }
+});
+
+// show tasks from user id
 router.get("/tasks", auth, async (req, res) => {
   const userId = req.user.id;
   try {
