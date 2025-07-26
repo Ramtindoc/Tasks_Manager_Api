@@ -1,13 +1,13 @@
-const userModel = require("../models/users-model");
+const { UserModel } = require("../models/users-model");
 const Joi = require("joi");
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { tryCatchHandller } = require("../utilities/trycatch_handller");
 const appError = require("../utilities/app_error");
-const logger = require("../logger/logger");
+// const logger = require("../logger/logger");
 const rateLimit = require("express-rate-limit");
-const TokenModel = require("../models/token-model");
+const { TokenModel } = require("../models/token-model");
 const { generateTokens } = require("../utilities/token");
 require("dotenv").config();
 
@@ -34,7 +34,7 @@ const register = tryCatchHandller(async (req, res) => {
   if (validateResult.error) throw validateResult.error;
 
   // get email from user model
-  const user = await userModel.getEmail(req.body.email);
+  const user = await UserModel.getEmail(req.body.email);
   if (user) {
     throw new appError(100, "user is already register", 400);
   }
@@ -42,15 +42,16 @@ const register = tryCatchHandller(async (req, res) => {
   const hashPass = await bcrypt.hash(req.body.password, 10);
 
   // insert into dbms
-  const result = await userModel.insertUser(
+  const result = await UserModel.insertUser(
     req.body.name,
     req.body.email,
     hashPass
   );
-  logger.register(result);
+  // logger.register(result);
+  console.log(result);
 
   // new user
-  const newUser = await userModel.getEmail(req.body.email);
+  const newUser = await UserModel.getEmail(req.body.email);
 
   const token = jwt.sign({ id: newUser.id }, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "15m",
@@ -73,7 +74,7 @@ const login = tryCatchHandller(async (req, res) => {
   if (validateResult.error)
     return res.send(validateResult.error.details[0].message);
 
-  const user = await userModel.getEmail(req.body.email);
+  const user = await UserModel.getEmail(req.body.email);
   if (!user) {
     return res.status(404).send("email or password is invalid");
   }
@@ -83,7 +84,7 @@ const login = tryCatchHandller(async (req, res) => {
 
   const { accessToken, refreshToken, expiresAt } = generateTokens(user.id);
 
-  await TokenModel.storeToken(user.id, accessToken, refreshToken, expiresAt);
+  await TokenModel.storeToken(accessToken, refreshToken, expiresAt);
 
   return res.header("authorization", accessToken).send(_.pick(user, "email"));
 });
