@@ -16,10 +16,10 @@ const { method } = require("lodash");
 
 // Enable HTTP request logging in development mode for easier debugging
 if (app.get("env") === "development") {
-  logger("env : development");
+  logger("in development");
   app.use(morgan("dev"));
 } else if (app.get("env") === "production") {
-  logger("env : production");
+  logger("in production");
   app.use(morgan("combined"));
 }
 
