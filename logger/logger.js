@@ -1,4 +1,4 @@
-const logger = (result)=>{
+const logger = (result) => {
   console.log(result);
-}
-module.exports = {logger};
+};
+module.exports = { logger };
