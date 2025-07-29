@@ -11,6 +11,7 @@ A Node.js REST API with user authentication (access & refresh tokens), task mana
 - 🔁 Refresh Token Endpoint
 - 🗂️ User Task CRUD (Create, Read, Delete)
 - 🛡️ Protected Routes with Middleware
+- 💾 Sequelize ORM (auto create tables)
 - 🧪 Postman-ready
 
 ---
